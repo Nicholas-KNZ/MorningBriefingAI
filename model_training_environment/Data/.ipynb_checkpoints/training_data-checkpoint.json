@@ -1,0 +1,79 @@
+{
+    "intents": [
+        {
+            "label": "greeting",
+            "input": [
+                "Hello there!", 
+                "Good morning!", 
+                "Hey!", 
+                "Yo, how's it going?", 
+                "Sup?",
+                "Hi there!",
+                "How do you do?",
+                "Greetings!",
+                "Good day!",
+                "Hey, what's up?"
+            ]
+        },
+        {
+            "label": "weather",
+            "input": [
+                "Should I bring an umbrella with me?",
+                "Should I be worried about the weather later?",
+                "Is it going to be cold or rainy later?",
+                "Do I need my raincoat today?",
+                "What's the forecast for today?",
+                "Will it rain later?",
+                "Should I wear something warm today?",
+                "Is it sunny outside?",
+                "What’s the weather like?",
+                "How’s the weather today?"
+            ]
+        },
+        {
+            "label": "news",
+            "input": [
+                "What's new in the world?",
+                "Tell me something exciting from today's headlines.",
+                "Anything worth knowing in today's updates?",
+                "What’s trending in the news?",
+                "Can you share today’s top story?",
+                "What’s the latest headline?",
+                "What’s going on in the world?",
+                "Any important updates from today?",
+                "What’s happening globally?",
+                "Catch me up on the news, please."
+            ]
+        },
+        {
+            "label": "motivation",
+            "input": [
+                "I need some inspiration.",
+                "I'm feeling really down today.",
+                "Cheer me up, please.",
+                "Can you give me a little push to get started?",
+                "I’m stuck in a rut. Can you inspire me?",
+                "Motivate me to get through the day.",
+                "I need a boost of confidence.",
+                "Help me feel more positive today.",
+                "Give me a reason to keep going.",
+                "Encourage me to tackle my goals."
+            ]
+        },
+        {
+            "label": "breakfast",
+            "input": [
+                "What are some good breakfast recipes?",
+                "I'm starving, give me some food ideas!",
+                "I need a quick breakfast recipe.",
+                "I'm craving something delicious for breakfast. Any ideas?",
+                "What should I eat for breakfast?",
+                "Give me a simple breakfast suggestion.",
+                "Can you suggest a healthy breakfast option?",
+                "What’s a good breakfast idea for a busy morning?",
+                "I want to try a new breakfast recipe. Any thoughts?",
+                "What’s a classic breakfast dish I can make?"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Briefing AI</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <nav>
+        <h3>Morning Briefing AI</h3>
+        <img src="logo.jpg" alt="Logo">
+    </nav>
+
+    <div class="container">
+        <h1>Morning Briefing AI</h1>
+        <h2>Your personal assistant in the morning</h2>
+
+        <div class="chatbox-section">
+            <div id="chatbox" class="chatbox"></div>
+            <div class="input-container">
+                <input id="input" type="text" name="query" placeholder="Ask me about the weather, news, motivation, or breakfast ideas!">
+                <button id="button" onclick="myFunction()">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('input');
+        const chatbox = document.getElementById('chatbox');
+        const button = document.getElementById('button');
+
+        function myFunction() {
+            const inputValue = inputField.value.trim();
+            if (!inputValue) return;
+
+            fetch('/process_input', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: inputValue })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Create user input message bubble
+                const userBubble = document.createElement('div');
+                userBubble.className = 'message user';
+                userBubble.innerHTML = inputValue;
+
+                // Create AI response message bubble
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'message ai';
+                aiBubble.innerHTML = data.result;
+
+                // Append bubbles to chatbox
+                chatbox.appendChild(userBubble);
+                chatbox.appendChild(aiBubble);
+
+                // Scroll to the bottom of chatbox
+                chatbox.scrollTop = chatbox.scrollHeight;
+
+                // Clear the input field for better user experience
+                inputField.value = '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

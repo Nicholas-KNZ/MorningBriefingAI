@@ -1,0 +1,164 @@
+import random
+import requests
+import tensorflow as tf
+from nltk.corpus import stopwords
+from difflib import SequenceMatcher
+import numpy as np
+import os
+import nltk
+import string
+from dotenv import load_dotenv
+
+
+# Chat Bot Wrapper Class
+
+class ChatBot:
+
+    def __init__(self, model, preprocessor, functionality):
+
+        self.model = tf.keras.models.load_model(model)
+        self.model_preprocessor = preprocessor
+        self.functionality = functionality
+        load_dotenv()
+
+
+    def predict(self, input):
+
+        preprocessed_input = self.model_preprocessor.nlp_preprocessing(input)
+
+        preprocessed_input = self.model_preprocessor.embed(preprocessed_input)
+
+        prediction = self.model.predict(np.array([preprocessed_input]))
+
+        predicted_category = np.argmax(prediction, axis=1)
+
+        match predicted_category:
+
+            case 0:
+                return self.functionality.greeting()
+
+            case 1:
+                return self.functionality.recipe()
+
+            case 2:
+                return self.functionality.weather()
+
+            case 3:
+                return self.functionality.headlines()
+
+            case 4:
+                return self.functionality.motivate()
+
+# Functionality for the Chat Bot
+class ChatBotFunctionalityHelper:
+
+    def motivate(self):
+        motivational_quote = ["Success is not final, failure is not fatal: It is the courage to continue that counts. – Winston Churchill",
+                            "Believe you can and you're halfway there. – Theodore Roosevelt",
+                            "Don't watch the clock; do what it does. Keep going. – Sam Levenson",
+                            "Your limitation—it's only your imagination.",
+                            "Dream big and dare to fail. – Norman Vaughan"
+                            "The way to get started is to quit talking and begin doing. – Walt Disney",
+                            "Act as if what you do makes a difference. It does. – William James",
+                            "Hardships often prepare ordinary people for an extraordinary destiny. – C.S. Lewis",
+                            "Success usually comes to those who are too busy to be looking for it. – Henry David Thoreau",
+                            "The only limit to our realization of tomorrow will be our doubts of today. – Franklin D. Roosevelt"]
+        introduction = ["Maybe this quote will inspire you: \n", "Think about this: \n", "When I feel demotivated, I think about this quote: \n", 
+                    "When I want to feel motivated, I rememeber this quote: \n"]
+        
+        random.seed(None)
+
+        return "".join((introduction[random.randint(0, len(introduction)-1)], motivational_quote[random.randint(0, len(motivational_quote)-1)]))
+    
+    def greeting(self):
+        greeting = ["Hello, how can I assist you today?", "Hey, what can I do for you?", "Hello, how can I help you?"]
+        return greeting[random.randint(0,2)]
+
+    def recipe(self):
+        recipes = []
+        recipes.append({'answer': "Look at this awesome pancake recipe, I found online: \n", 'link': "https://www.inspiredtaste.net/24593/essential-pancake-recipe/"})
+        recipes.append({'answer': "What about avocado toast? That is my favorite recipe: \n", 'link': "https://www.loveandlemons.com/avocado-toast-recipe/"})
+        recipes.append({'answer': "What about this delicios porridge: \n", 'link': "https://www.allrecipes.com/recipe/73155/porridge/"})
+
+        i = random.randint(0,2) 
+        
+        return recipes[i]['answer'] + recipes[i]['link']
+    
+    def headlines(self): 
+
+        url = f'https://newsapi.org/v2/top-headlines?'
+        'country=us&'         # Optional: specify country to narrow down
+        'pageSize=5&'         # Limit to 5 articles
+        'apiKey={os.getenv("API_KEY_News")}'
+
+    
+        response = requests.get(url)
+        data = response.json()
+
+        answer = ""
+
+        if data.get('status') == 'ok':
+            articles = data.get('articles', [])
+            for i, article in enumerate(articles, 1):
+                answer += str(i)
+                answer += " "
+                answer += article['title']
+                answer += "\n"
+        else:
+            print("Error:", data.get('message'))
+
+        result = "Look at what I found: \n" + answer
+
+        return result
+    
+    def weather(self): 
+        API_KEY = os.getenv("API_KEY_Weather")
+        location = "Frankfurt"
+
+        url = f"http://api.weatherapi.com/v1/current.json?key={API_KEY}&q={location}"
+
+        response = requests.get(url).json()
+
+        return "That is the data I found for Frankfurt: \n" + "Weather for Frankfurt" + "\n" + 'Forecast: ' +  response['current']['condition']['text'] + "\n" + "Wind: " + str(response['current']['wind_mph']) + "\n" + "Temperature: " + str(response['current']['feelslike_c'])
+
+# Preprocessing Helper
+class ChatBotHelper_Improved:
+
+    def __init__(self, bag_of_words):
+        self.bag_of_words = bag_of_words
+
+    @staticmethod
+    def nlp_preprocessing(sentence):
+        stop_words = set(stopwords.words('english'))
+
+        tokens = nltk.word_tokenize(sentence)
+
+        lowercased_tokens = [token.lower() for token in tokens]
+
+        filtered_tokens_stopwords = [token for token in lowercased_tokens if token not in stop_words]
+
+        filtered_tokens = [token for token in filtered_tokens_stopwords if token not in string.punctuation]
+
+        filtered_tokens_two = [token for token in filtered_tokens if token not in ["'", "'s", "’"]]
+
+        #  return filtered_tokens
+
+        return filtered_tokens_two
+
+    def embed(self, sentence):
+        # Tokenize the sentence into words if it's a string
+        sentence_words = sentence.split() if isinstance(sentence, str) else sentence
+
+        return [
+            1 if word in sentence_words else 0
+            for word in self.bag_of_words
+        ]
+
+        #return [
+         #   1 if word in sentence_words or any(self.lexical_similarity(word, w) > 0.75 for w in sentence_words) else 0
+          #  for word in self.bag_of_words]
+
+    def lexical_similarity(word1, word2):
+        if not isinstance(word1, str) or not isinstance(word2, str):
+            raise ValueError("Both inputs must be strings")
+        return SequenceMatcher(None, word1, word2).ratio()

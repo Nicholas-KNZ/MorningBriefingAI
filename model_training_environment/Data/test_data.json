@@ -1,0 +1,54 @@
+{
+    "intents": [
+        {
+            "label": "greeting",
+            "input": [
+                "Hi!",
+                "How’s it going?",
+                "Hello!",
+                "Nice to meet you!",
+                "What’s up?"
+            ]
+        },
+        {
+            "label": "weather",
+            "input": [
+                "Do I need an umbrella today?",
+                "Will it be chilly outside?",
+                "Should I prepare for rain later?",
+                "What’s the weather forecast?",
+                "Is it going to be sunny or cloudy?"
+            ]
+        },
+        {
+            "label": "news",
+            "input": [
+                "Any big stories today?",
+                "What’s happening in the news?",
+                "Update me on today’s events.",
+                "Can you share the latest updates?",
+                "What’s the buzz in the news?"
+            ]
+        },
+        {
+            "label": "motivation",
+            "input": [
+                "I’m feeling a bit unmotivated.",
+                "Can you share some uplifting words?",
+                "Inspire me, please.",
+                "I could use some encouragement.",
+                "Help me find some motivation."
+            ]
+        },
+        {
+            "label": "breakfast",
+            "input": [
+                "What’s a tasty breakfast option?",
+                "I want to try something new for breakfast.",
+                "Any suggestions for a healthy breakfast?",
+                "What can I make quickly for breakfast?",
+                "Can you give me an idea for breakfast?"
+            ]
+        }
+    ]
+}
