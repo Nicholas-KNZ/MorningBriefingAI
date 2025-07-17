@@ -1,65 +1,54 @@
 from flask import Flask, render_template, request, jsonify
-from model import ChatBot, ChatBotFunctionalityHelper, ChatBotHelper_Improved
 import json
-import numpy as np
+import logging
 
+from model import ChatBot, ChatBotFunctionalityHelper, ChatBotHelper_Improved
 
+# Set up Flask app
 app = Flask(__name__)
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+# Load vocab once at startup
+with open("model_training_environment/vocab.json", "r") as vocab_file:
+    vocab = json.load(vocab_file)
+
+# Initialize helpers and model once
+functionality = ChatBotFunctionalityHelper()
+chatbothelper = ChatBotHelper_Improved(vocab)
+mymodel = ChatBot('model_training_environment/chatbot_model.h5', chatbothelper, functionality)
+
+
 @app.route('/')
-def hello_world():
+def home():
     return render_template('main.html')
+
 
 @app.route('/process_input', methods=['POST'])
 def process_input():
-
-    functionality = ChatBotFunctionalityHelper()
-
-    vocab_file = open("model_training_environment/vocab.json", "r")
-    vocab = json.load(vocab_file)
-    vocab_file.close()
-    print(type(vocab))
-    chatbothelper = ChatBotHelper_Improved(vocab)
-
     try:
-        # Get JSON data sent by frontend
         data = request.get_json()
 
-        # Extract input field data
-        user_input = data.get('input', '')  # Default to empty string if 'input' key doesn't exist
+        # Validate input
+        user_input = data.get('input', '')
+        if not isinstance(user_input, str) or not user_input.strip():
+            return jsonify({'error': 'Invalid input'}), 400  # HTTP 400 Bad Request
 
-        # Example function: convert input to uppercase
-        mymodel = ChatBot('model_training_environment/chatbot_model.h5', chatbothelper, functionality)
-
+        # Get model prediction
         processed_result = mymodel.predict(user_input)
-
-        #preprocessed_input = chatbothelper.nlp_preprocessing(user_input)
-        #preprocessed_input = chatbothelper.embed(preprocessed_input)
-        #processed_result = mymodel.predict(np.array([preprocessed_input]))
-        #prediction = np.argmax(processed_result)
-
 
         return jsonify({'result': processed_result}), 200  # HTTP 200 OK
 
     except Exception as e:
-            # If there is an error, return an error message
-            return jsonify({'error': str(e)}), 500  # HTTP 500 Internal Server Error
+        logging.exception("Error during input processing")
+        return jsonify({'error': 'An internal error occurred'}), 500  # HTTP 500 Internal Server Error
+
+
+@app.route('/health')
+def health_check():
+    return jsonify({'status': 'ok'}), 200
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
