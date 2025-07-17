@@ -7,7 +7,6 @@ import numpy as np
 import os
 import nltk
 import string
-from dotenv import load_dotenv
 
 
 # Chat Bot Wrapper Class
@@ -18,7 +17,9 @@ class ChatBot:
         self.model = tf.keras.models.load_model(model)
         self.model_preprocessor = preprocessor
         self.functionality = functionality
-        load_dotenv()
+        if os.environ.get("RENDER") is None:
+            from dotenv import load_dotenv
+            load_dotenv()
 
 
     def predict(self, input):
