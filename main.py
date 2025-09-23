@@ -4,6 +4,11 @@ import json
 import logging
 from model import ChatBot, ChatBotFunctionalityHelper, ChatBotHelper_Improved
 import os
+import nltk  # <-- add this
+
+# Download necessary NLTK data at startup
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 
 app = Flask(__name__)
 CORS(app)
@@ -41,9 +46,6 @@ def process_input():
 def health_check():
     return jsonify({'status': 'ok'})
 
-import os
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
     app.run(host="0.0.0.0", port=port)
-
