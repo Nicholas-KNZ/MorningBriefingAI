@@ -41,6 +41,9 @@ def process_input():
 def health_check():
     return jsonify({'status': 'ok'})
 
+import os
+
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
     app.run(host="0.0.0.0", port=port)
+
