@@ -51,7 +51,7 @@ class ChatBot:
                 return self.functionality.motivate()
 
             case 4:
-                return self.functionality.breakfast()
+                return self.functionality.recipe()
 
 
 # Functionality for the Chat Bot
