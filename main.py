@@ -4,11 +4,17 @@ import json
 import logging
 from model import ChatBot, ChatBotFunctionalityHelper, ChatBotHelper_Improved
 import os
-import nltk  # <-- add this
+import nltk  
 
+'''
 # Download necessary NLTK data at startup
 nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
+'''
+
+nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
+nltk.data.path.append(nltk_data_path)
+
 
 app = Flask(__name__)
 CORS(app)

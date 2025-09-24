@@ -125,7 +125,7 @@ class ChatBotFunctionalityHelper:
             "Believe you can and you're halfway there. – Theodore Roosevelt",
             "Don't watch the clock; do what it does. Keep going. – Sam Levenson",
             "Your limitation—it's only your imagination.",
-            "Dream big and dare to fail. – Norman Vaughan"
+            "Dream big and dare to fail. – Norman Vaughan",
             "The way to get started is to quit talking and begin doing. – Walt Disney",
             "Act as if what you do makes a difference. It does. – William James",
             "Hardships often prepare ordinary people for an extraordinary destiny. – C.S. Lewis",
